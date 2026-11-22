@@ -17,7 +17,7 @@ public final class AthlandItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Athland.MODID);
 
     /**
-     * 水凝胶：钓鱼可得的渔获，食用后补充 150 tick（7.5 秒）空气槽。
+     * 水凝胶：钓鱼可得的渔获，食用后补充 300 tick（15 秒）空气槽，即一次回满默认上限。
      */
     public static final DeferredItem<Item> HYDROGEL = ITEMS.register("hydrogel",
         () -> new Item(new Item.Properties()
@@ -26,7 +26,7 @@ public final class AthlandItems {
                 .saturationModifier(0.1F)
                 .alwaysEdible()
                 .build())
-            .component(AthlandComponents.OXYGEN_RESTORE.get(), new OxygenRestore(150))));
+            .component(AthlandComponents.OXYGEN_RESTORE.get(), new OxygenRestore(300))));
 
     /**
      * 煎蛋：由原版鸡蛋烹饪（熔炉 / 烟熏炉 / 营火）得到的料理。

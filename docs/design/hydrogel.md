@@ -33,9 +33,10 @@
 setAirSupply(min(getMaxAirSupply(), getAirSupply() + N))
 ```
 
-**N = 150**（7.5 秒 = 上限一半）。
+**N = 300**（15 秒 = 默认上限，玩家 `getMaxAirSupply()` 恰为 300 tick）。
 
-- **不回满（300）**：回满等于零成本永不溺水，会让水下呼吸附魔失去价值。半数槽定位为「救一次濒死下潜」，一次完整下潜需两个，形成补给节奏。
+- **一次回满**：一个水凝胶正好补满默认空气槽（300 tick = 15 秒），定位从「救一次濒死下潜」上调为「救一次完整下潜」。一次 15 秒的标准下潜所需氧气，一个水凝胶覆盖，仍需为更深的下潜备货。
+- **上限仍由 `getMaxAirSupply()` 兜底**：`setAirSupply(min(max, current + N))` 保证不超过上限；带额外空气上限的模组/装备场景下，水凝胶仍只补 300 tick，不越界。
 - **不用 `generic.oxygen_bonus`**：该属性是「降低氧气消耗速度」（等价水下呼吸），语义是减耗不是补充。
 
 ### 4.2 组件与物品
@@ -107,7 +108,7 @@ src/main/resources/assets/athland/textures/item/hydrogel.png          贴图
 1. `.\gradlew.bat compileJava` / `build` 通过。
 2. `.\gradlew.bat runData` 产出上述 5 个文件且内容正确。
 3. 游戏内：钓鱼约 5% 获得 `athland:hydrogel`；`/give` 可直接获取。
-4. 水下空气槽不足时食用，气泡立刻回涨 150 tick，HUD 同步更新。
+4. 水下空气槽不足时食用，气泡立刻回涨 300 tick（一次回满默认上限），HUD 同步更新。
 5. 空气槽已满时食用不异常、不超过 `getMaxAirSupply()`；陆地食用不报错。
 6. 生物食用不触发补氧。
 
@@ -132,10 +133,11 @@ src/main/resources/assets/athland/textures/item/hydrogel.png          贴图
 | 2026-10-31 | 本轮建立 DataGen 基建（4 provider + 入口） | AGENTS.md §5「DataGen 优先，不手写 JSON」 |
 | 2026-10-31 | 删除手写空 `en_us.json`，语言完全交给 DataGen | 同路径两份文件会让 `processResources` 报 duplicate 失败 |
 | 2026-10-31 | `build.gradle` 缓存排除改 `exclude(".cache/**")` | `PatternFilter` 相对每个源目录匹配，原写法匹配不到，缓存被打进 jar |
+| 2026-11-22 | N 从 150 提升到 300 tick（回满默认空气槽） | 需求方要求恢复量翻倍；一个水凝胶覆盖一次 15 秒标准下潜 |
 
 ### 待确认
 
-无。参数已全部落定（N=150、概率 5%、仅 persistent、luck 不影响）。
+无。参数已全部落定（N=300、概率 5%、仅 persistent、luck 不影响）。
 
 ## 9. 参考 API（本地 `build/moddev/artifacts/neoforge-21.1.251-sources.jar`）
 
