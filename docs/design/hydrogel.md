@@ -35,7 +35,9 @@ setAirSupply(min(getMaxAirSupply(), getAirSupply() + N))
 
 **N = 300**（15 秒 = 默认上限，玩家 `getMaxAirSupply()` 恰为 300 tick）。
 
-- **一次回满**：一个水凝胶正好补满默认空气槽（300 tick = 15 秒），定位从「救一次濒死下潜」上调为「救一次完整下潜」。一次 15 秒的标准下潜所需氧气，一个水凝胶覆盖，仍需为更深的下潜备货。
+- **一次回满**：一个水凝胶正好补满默认空气槽（300 tick = 15 秒），覆盖一次标准下潜的完整用氧预算。
+- **食用本身有成本，300 不是白给**：水凝胶带 `FOOD` 组件，食用动画 **32 tick**（`FoodProperties.eatSeconds` 默认 1.6 秒 → `eatDurationTicks()` = (int)(1.6×20) = 32）。补氧挂在 `LivingEntityUseItemEvent.Finish`，即**吃完那一刻**才结算；而这 32 tick 里玩家还在水下，空气按 −1/tick 继续消耗（`LivingEntity.baseTick` → `decreaseAirSupply`）。所以 300 中有 32 tick 是食用期间自付的，水下吃完实际到手 ≈ **268 tick ≈ 13.4 秒**。
+- **风险窗口（1.6 秒内几乎无法自保）**：食用期间客户端 `LocalPlayer` 把移动输入 ×0.2、冲刺被禁用（`canStartSprinting` 要求 `!isUsingItem()`）、攻击键点击被吞掉（`Minecraft` 消费 attack click）——这 1.6 秒是站着挨打的窗口。且空气已见底时（≤ 12 tick）开吃，32 tick 内空气降到 ≤ −20，会先挨一次溺水伤害（2.0 点，`LivingEntity.baseTick` 的 drown 分支）。所以水凝胶是「下潜前备货」，不是「溺水时按一下」——定位是「一次完整下潜的用氧」，仍需为更深的下潜带备货。
 - **上限仍由 `getMaxAirSupply()` 兜底**：`setAirSupply(min(max, current + N))` 保证不超过上限；带额外空气上限的模组/装备场景下，水凝胶仍只补 300 tick，不越界。
 - **不用 `generic.oxygen_bonus`**：该属性是「降低氧气消耗速度」（等价水下呼吸），语义是减耗不是补充。
 
@@ -54,6 +56,8 @@ setAirSupply(min(getMaxAirSupply(), getAirSupply() + N))
 监听 `LivingEntityUseItemEvent.Finish`（game bus）：事件点在 `finishUsingItem` 之后，食物已吃掉、饱和度已结算。处理器读 `event.getItem()` 上的组件，若是 `Player` 则补空气槽，**仅服务端执行**（空气槽由 SynchedEntityData 同步，客户端写会被覆盖）。
 
 选事件而非覆写 `Item#finishUsingItem`：对「任何带该组件的食物」通用，后续新增带氧气的物品不用改代码。
+
+**时序代价**：事件点在 `completeUsingItem()`（`LivingEntity` :3271）触发，即**食用动画播完那一刻**才补氧，不是按下右键就补。食用动画 32 tick，这期间玩家仍在水下掉氧（−1/tick），所以 N=300 的实际到手是 300 − 32 = 268 tick。这是「恢复量翻倍仍不算过分」的核心依据：物品有使用成本，不是按一下就白给。
 
 ### 4.4 钓鱼获得：Global Loot Modifier
 
@@ -108,9 +112,10 @@ src/main/resources/assets/athland/textures/item/hydrogel.png          贴图
 1. `.\gradlew.bat compileJava` / `build` 通过。
 2. `.\gradlew.bat runData` 产出上述 5 个文件且内容正确。
 3. 游戏内：钓鱼约 5% 获得 `athland:hydrogel`；`/give` 可直接获取。
-4. 水下空气槽不足时食用，气泡立刻回涨 300 tick（一次回满默认上限），HUD 同步更新。
+4. 水下空气槽不足时食用，气泡在**食用动画播完那一刻**回涨 300 tick（一次回满默认上限），HUD 同步更新。
 5. 空气槽已满时食用不异常、不超过 `getMaxAirSupply()`；陆地食用不报错。
 6. 生物食用不触发补氧。
+7. 水下从空气槽 100 开始吃一个水凝胶：32 tick 食用期内空气降到 ~68，吃完瞬间补到 300（净增 ~232 tick）。
 
 ## 7. 风险
 
@@ -134,6 +139,7 @@ src/main/resources/assets/athland/textures/item/hydrogel.png          贴图
 | 2026-10-31 | 删除手写空 `en_us.json`，语言完全交给 DataGen | 同路径两份文件会让 `processResources` 报 duplicate 失败 |
 | 2026-10-31 | `build.gradle` 缓存排除改 `exclude(".cache/**")` | `PatternFilter` 相对每个源目录匹配，原写法匹配不到，缓存被打进 jar |
 | 2026-11-22 | N 从 150 提升到 300 tick（回满默认空气槽） | 需求方要求恢复量翻倍；一个水凝胶覆盖一次 15 秒标准下潜 |
+| 2026-11-22 | 认可 N=300「一次回满」的平衡性：食用动画 32 tick 期间空气照常 −1/tick，实际到手 ≈268 tick | 物品有使用成本（站着不动 1.6 秒 + 自付 32 tick 氧），不是按一下白给；原「不回满」约束由「有使用成本」替代 |
 
 ### 待确认
 

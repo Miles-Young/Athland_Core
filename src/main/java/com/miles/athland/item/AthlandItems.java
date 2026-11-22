@@ -18,6 +18,8 @@ public final class AthlandItems {
 
     /**
      * 水凝胶：钓鱼可得的渔获，食用后补充 300 tick（15 秒）空气槽，即一次回满默认上限。
+     *
+     * <p>实际到手约 268 tick：补氧在食用动画（32 tick）播完那一刻才结算，期间空气照常消耗。
      */
     public static final DeferredItem<Item> HYDROGEL = ITEMS.register("hydrogel",
         () -> new Item(new Item.Properties()
