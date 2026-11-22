@@ -25,9 +25,11 @@ public final class AthlandDataProviders {
         // 服务端资源：战利品表与全局战利品修改器
         generator.addProvider(event.includeServer(), new AthlandLootTableProvider(output, registries));
         generator.addProvider(event.includeServer(), new AthlandLootModifiers(output, registries));
+        generator.addProvider(event.includeServer(), new AthlandRecipeProvider(output, registries));
 
         // 客户端资源：物品模型与语言文件
         generator.addProvider(event.includeClient(), new AthlandItemModelProvider(output, Athland.MODID, existingFileHelper));
         generator.addProvider(event.includeClient(), new AthlandLanguageProvider(output, Athland.MODID, "en_us"));
+        generator.addProvider(event.includeClient(), new AthlandLanguageProvider(output, Athland.MODID, "zh_cn"));
     }
 }

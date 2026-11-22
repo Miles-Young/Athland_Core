@@ -33,7 +33,14 @@ public class Athland {
         CREATIVE_MODE_TABS.register("athland", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup." + MODID))
             .icon(() -> new ItemStack(AthlandItems.HYDROGEL.get()))
-            .displayItems((parameters, output) -> output.accept(AthlandItems.HYDROGEL.get()))
+            .displayItems((parameters, output) -> {
+                output.accept(AthlandItems.HYDROGEL.get());
+                output.accept(AthlandItems.FRIED_EGG.get());
+                output.accept(AthlandItems.SALTED_EGG.get());
+                output.accept(AthlandItems.SALTED_EGG_OPENED.get());
+                output.accept(AthlandItems.PIDAN.get());
+                output.accept(AthlandItems.PIDAN_OPENED.get());
+            })
             .build());
 
     public Athland(IEventBus modEventBus) {

@@ -18,6 +18,9 @@ Athland 是一个**冒险拓展**向的 Minecraft 模组，核心体验是**新�
 | 内容 | 说明 |
 |---|---|
 | 水凝胶（Hydrogel） | 钓鱼时约 5% 概率额外获得的渔货。食用后补回 150 tick（7.5 秒）空气槽，正好救回一次濒死下潜；不叠加、不超过上限。 |
+| 煎蛋（Fried Egg） | 料理。原版鸡蛋经熔炉、烟熏炉或营火烹饪而成。食用回复 4 格饱食度与 12.8 饱和度，数值对标原版熟牛肉。 |
+| 咸蛋（Salted Egg） | 料理。工作台用海带 + 蛋合成。需先敲开去壳才能吃，敲开播放投掷鸡蛋的音效。 |
+| 皮蛋（Pidan） | 料理。工作台用下界石英 + 岩浆膏 + 蛋合成。需先敲开去壳才能吃。 |
 | 创意标签 | 物品归入 `athland` 创意标签。 |
 
 模组 ID `athland`，包名 `com.miles.athland`。数据生成（DataGen）基建已就位，资源由 `runData` 产出到 `src/generated/resources`。
@@ -59,6 +62,8 @@ cd Athland_Core
 |---|---|
 | [`docs/design/style.md`](docs/design/style.md) | 风格规范：玩法基调、世界观、美术、命名文本的唯一出处 |
 | [`docs/design/hydrogel.md`](docs/design/hydrogel.md) | 水凝胶功能设计文档 |
+| [`docs/design/fried_egg.md`](docs/design/fried_egg.md) | 煎蛋功能设计文档 |
+| [`docs/design/preserved_eggs.md`](docs/design/preserved_eggs.md) | 咸蛋与皮蛋功能设计文档 |
 
 风格条目未定稿处（如美术、命名规范）在 `style.md` 中标注为 TODO，后续功能设计以该文件为准。
 

@@ -1,4 +1,9 @@
 {
+  "item.athland.fried_egg": "Fried Egg",
   "item.athland.hydrogel": "Hydrogel",
+  "item.athland.pidan": "Pidan",
+  "item.athland.pidan_opened": "Peeled Pidan",
+  "item.athland.salted_egg": "Salted Egg",
+  "item.athland.salted_egg_opened": "Peeled Salted Egg",
   "itemGroup.athland": "Athland"
 }

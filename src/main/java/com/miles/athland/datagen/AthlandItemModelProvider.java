@@ -16,5 +16,10 @@ public class AthlandItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         basicItem(AthlandItems.HYDROGEL.get());
+        basicItem(AthlandItems.FRIED_EGG.get());
+        basicItem(AthlandItems.SALTED_EGG.get());
+        basicItem(AthlandItems.SALTED_EGG_OPENED.get());
+        basicItem(AthlandItems.PIDAN.get());
+        basicItem(AthlandItems.PIDAN_OPENED.get());
     }
 }
